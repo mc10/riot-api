@@ -217,7 +217,7 @@
 			if ($method === 'GET') {
 				$curlMethod = CURLOPT_HTTPGET;
 			} elseif ($method === 'POST') {
-				$curlMethod = CURLOPT_PORT;
+				$curlMethod = CURLOPT_POST;
 			} else {
 				throw new InvalidArgumentException('Invalid HTTP method; must be either GET or POST.');
 			}
