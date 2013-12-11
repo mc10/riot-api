@@ -63,7 +63,7 @@
 			return $recentGames['games'];
 		}
 
-		public function getLeaguesData($summonerId) {
+		public function getLeagues($summonerId) {
 			if (!is_int($summonerId)) {
 				throw new \InvalidArgumentException('Summoner ID must be an integer.');
 			}
@@ -71,9 +71,9 @@
 			$apiUrl = $this->v21Url . '/league/by-summoner/' . $summonerId;
 			$params = $this->getDefaultParams();
 
-			$leaguesData = self::getJsonResponse($apiUrl, $params);
+			$leagues = self::getJsonResponse($apiUrl, $params);
 
-			return $leaguesData;
+			return $leagues;
 		}
 
 		public function getStatsSummary($summonerId, $season = null) {
