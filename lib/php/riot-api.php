@@ -12,7 +12,7 @@
 		private $apiKey;
 		private $region;
 
-		// API URLs with the correct region bound
+		// API URLs with the correct region bound by bindRegionToUrl
 		private $v11Url;
 		private $v21Url;
 
