@@ -177,6 +177,19 @@
 			return $summonerNames['summoners'];
 		}
 
+		public function getTeams($summonerId) {
+			if (!is_int($summonerId)) {
+				throw new \InvalidArgumentException('Summoner ID must be an integer.');
+			}
+
+			$apiUrl = $this->v21Url . '/team/by-summoner/' . $summonerId;
+			$params = $this->getDefaultParams();
+
+			$teams = self::getJsonResponse($apiUrl, $params);
+
+			return $teams;
+		}
+
 		private function getDefaultParams() {
 			$params = array();
 			$params['api_key'] = $this->apiKey;
