@@ -37,7 +37,7 @@
 			$this->v21Url = $this->bindRegionToUrl(self::$V2_1_URL, $region);
 		}
 
-		public function getChampionList($freeToPlay = null) {
+		public function getChampions($freeToPlay = null) {
 			$apiUrl = $this->v11Url . '/champion';
 			$params = $this->getDefaultParams();
 
@@ -48,6 +48,19 @@
 			$champions = self::getJsonResponse($apiUrl, $params);
 
 			return $champions['champions'];
+		}
+
+		public function getRecentGames($summonerId) {
+			if (!is_int($summonerId)) {
+				throw new InvalidArgumentException('Summoner ID must be an integer.');
+			}
+
+			$apiUrl = $this->v11Url . '/game/by-summoner/' . $summonerId . '/recent';
+			$params = $this->getDefaultParams();
+
+			$recentGames = self::getJsonResponse($apiUrl, $params);
+
+			return $recentGames['games'];
 		}
 
 		private function getDefaultParams() {
