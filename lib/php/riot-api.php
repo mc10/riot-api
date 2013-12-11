@@ -63,6 +63,53 @@
 			return $recentGames['games'];
 		}
 
+		public function getLeaguesData($summonerId) {
+			if (!is_int($summonerId)) {
+				throw new InvalidArgumentException('Summoner ID must be an integer.');
+			}
+
+			$apiUrl = $this->v21Url . '/league/by-summoner/' . $summonerId;
+			$params = $this->getDefaultParams();
+
+			$leaguesData = self::getJsonResponse($apiUrl, $params);
+
+			return $leaguesData;
+		}
+
+		public function getStatsSummary($summonerId, $season = null) {
+			if (!is_int($summonerId)) {
+				throw new InvalidArgumentException('Summoner ID must be an integer.');
+			}
+
+			$apiUrl = $this->v11Url . '/stats/by-summoner/' . $summonerId . '/summary';
+			$params = $this->getDefaultParams();
+
+			if (is_int($season)) {
+				$params['season'] = 'SEASON' . $season;
+			}
+
+			$statsSummary = self::getJsonResponse($apiUrl, $params);
+
+			return $statsSummary['playerStatSummaries'];
+		}
+
+		public function getRankedStats($summonerId, $season = null) {
+			if (!is_int($summonerId)) {
+				throw new InvalidArgumentException('Summoner ID must be an integer.');
+			}
+
+			$apiUrl = $this->v11Url . '/stats/by-summoner/' . $summonerId . '/ranked';
+			$params = $this->getDefaultParams();
+
+			if (is_int($season)) {
+				$params['season'] = 'SEASON' . $season;
+			}
+
+			$rankedStats = self::getJsonResponse($apiUrl, $params);
+
+			return $rankedStats['champions'];
+		}
+
 		private function getDefaultParams() {
 			$params = array();
 			$params['api_key'] = $this->apiKey;
