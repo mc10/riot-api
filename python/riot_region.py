@@ -1,5 +1,5 @@
 class Region:
-    REGIONS = ['BR', 'EUNE', 'EUW', 'NA', 'TR'];
+    REGIONS = ["BR", "EUNE", "EUW", "NA", "TR"];
 
     @classmethod
     def is_region(cls, region):
