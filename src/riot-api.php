@@ -42,14 +42,14 @@
 		}
 
 		public function getChampions($freeToPlay = null) {
-			$apiUrl = $this->v11Url . '/champion';
-			$params = $this->getDefaultParams();
+			$apiUrl = self::$API_URLS['champion'];
+			$params = array();
 
 			if (is_bool($freeToPlay)) {
 				$params['freeToPlay'] = ($freeToPlay ? 'true' : 'false');
 			}
 
-			$champions = self::getJsonResponse($apiUrl, $params);
+			$champions = $this->sendApiRequest($apiUrl, $params);
 
 			return $champions['champions'];
 		}
@@ -59,10 +59,8 @@
 				throw new \InvalidArgumentException('Summoner ID must be an integer.');
 			}
 
-			$apiUrl = $this->v11Url . '/game/by-summoner/' . $summonerId . '/recent';
-			$params = $this->getDefaultParams();
-
-			$recentGames = self::getJsonResponse($apiUrl, $params);
+			$apiUrl = self::$API_URLS['game'] . '/by-summoner/' . $summonerId . '/recent';
+			$recentGames = $this->sendApiRequest($apiUrl);
 
 			return $recentGames['games'];
 		}
@@ -72,10 +70,8 @@
 				throw new \InvalidArgumentException('Summoner ID must be an integer.');
 			}
 
-			$apiUrl = $this->v21Url . '/league/by-summoner/' . $summonerId;
-			$params = $this->getDefaultParams();
-
-			$leagues = self::getJsonResponse($apiUrl, $params);
+			$apiUrl = self::$API_URLS['league'] . '/by-summoner/' . $summonerId;
+			$leagues = $this->sendApiRequest($apiUrl);
 
 			return $leagues;
 		}
@@ -85,14 +81,14 @@
 				throw new \InvalidArgumentException('Summoner ID must be an integer.');
 			}
 
-			$apiUrl = $this->v11Url . '/stats/by-summoner/' . $summonerId . '/summary';
-			$params = $this->getDefaultParams();
+			$apiUrl = self::$API_URLS['stats'] . '/by-summoner/' . $summonerId . '/summary';
+			$params = array();
 
 			if (is_int($season)) {
 				$params['season'] = 'SEASON' . $season;
 			}
 
-			$statsSummary = self::getJsonResponse($apiUrl, $params);
+			$statsSummary = $this->sendApiRequest($apiUrl, $params);
 
 			return $statsSummary['playerStatSummaries'];
 		}
@@ -102,14 +98,14 @@
 				throw new \InvalidArgumentException('Summoner ID must be an integer.');
 			}
 
-			$apiUrl = $this->v11Url . '/stats/by-summoner/' . $summonerId . '/ranked';
-			$params = $this->getDefaultParams();
+			$apiUrl = self::$API_URLS['stats'] . '/by-summoner/' . $summonerId . '/ranked';
+			$params = array();
 
 			if (is_int($season)) {
 				$params['season'] = 'SEASON' . $season;
 			}
 
-			$rankedStats = self::getJsonResponse($apiUrl, $params);
+			$rankedStats = $this->sendApiRequest($apiUrl, $params);
 
 			return $rankedStats['champions'];
 		}
@@ -119,10 +115,8 @@
 				throw new \InvalidArgumentException('Summoner ID must be an integer.');
 			}
 
-			$apiUrl = $this->v11Url . '/summoner/' . $summonerId . '/masteries';
-			$params = $this->getDefaultParams();
-
-			$masteries = self::getJsonResponse($apiUrl, $params);
+			$apiUrl = self::$API_URLS['summoner'] . '/' . $summonerId . '/masteries';
+			$masteries = $this->sendApiRequest($apiUrl);
 
 			return $masteries['pages'];
 		}
@@ -132,10 +126,8 @@
 				throw new \InvalidArgumentException('Summoner ID must be an integer.');
 			}
 
-			$apiUrl = $this->v11Url . '/summoner/' . $summonerId . '/runes';
-			$params = $this->getDefaultParams();
-
-			$runes = self::getJsonResponse($apiUrl, $params);
+			$apiUrl = self::$API_URLS['summoner'] . '/' . $summonerId . '/runes';
+			$runes = $this->sendApiRequest($apiUrl);
 
 			return $runes['pages'];
 		}
@@ -145,10 +137,8 @@
 				throw new \InvalidArgumentException('Summoner name must be a string.');
 			}
 
-			$apiUrl = $this->v11Url . '/summoner/by-name/' . $summonerName;
-			$params = $this->getDefaultParams();
-
-			$summoner = self::getJsonResponse($apiUrl, $params);
+			$apiUrl = self::$API_URLS['summoner'] . '/by-name/' . $summonerName;
+			$summoner = $this->sendApiRequest($apiUrl);
 
 			return $summoner;
 		}
@@ -158,10 +148,8 @@
 				throw new \InvalidArgumentException('Summoner ID must be an integer.');
 			}
 
-			$apiUrl = $this->v11Url . '/summoner/' . $summonerId;
-			$params = $this->getDefaultParams();
-
-			$summoner = self::getJsonResponse($apiUrl, $params);
+			$apiUrl = self::$API_URLS['summoner'] . '/' . $summonerId;
+			$summoner = $this->sendApiRequest($apiUrl);
 
 			return $summoner;
 		}
@@ -173,10 +161,8 @@
 
 			$summonerIds = implode($summonerIdsList, ',');
 
-			$apiUrl = $this->v11Url . '/summoner/' . $summonerIds . '/name';
-			$params = $this->getDefaultParams();
-
-			$summonerNames = self::getJsonResponse($apiUrl, $params);
+			$apiUrl = self::$API_URLS['summoner'] . '/' . $summonerIds . '/name';
+			$summonerNames = $this->sendApiRequest($apiUrl);
 
 			return $summonerNames['summoners'];
 		}
@@ -186,10 +172,8 @@
 				throw new \InvalidArgumentException('Summoner ID must be an integer.');
 			}
 
-			$apiUrl = $this->v21Url . '/team/by-summoner/' . $summonerId;
-			$params = $this->getDefaultParams();
-
-			$teams = self::getJsonResponse($apiUrl, $params);
+			$apiUrl = self::$API_URLS['team'] . '/by-summoner/' . $summonerId;
+			$teams = $this->sendApiRequest($apiUrl);
 
 			return $teams;
 		}
@@ -255,11 +239,12 @@
 			return $response;
 		}
 
-		private function getDefaultParams() {
-			$params = array();
+		private function sendApiRequest($url, $params = array()) {
+			// Final touches on URL and params
+			$url = self::bind($url, 'region', $this->region);
 			$params['api_key'] = $this->apiKey;
 
-			return $params;
+			return self::getJsonResponse($url, $params);
 		}
 	}
 
