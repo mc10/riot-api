@@ -2,7 +2,7 @@
 	namespace RiotApi;
 
 	final class Region {
-		public static $REGIONS = array('BR', 'EUNE', 'EUW', 'NA', 'TR');
+		public static $REGIONS = array('BR', 'EUNE', 'EUW', 'KR', 'LAN', 'LAS', 'NA', 'OCE', 'RU', 'TR');
 
 		private function __construct() {}
 
