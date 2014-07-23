@@ -207,7 +207,7 @@
 			$httpQuery = http_build_query($params);
 			$url .= '?' . $httpQuery;
 
-			echo $url . "\n";
+			//echo $url . "\n";
 
 			$ch = curl_init();
 
@@ -216,8 +216,16 @@
 			} elseif ($method === 'POST') {
 				$curlMethod = CURLOPT_POST;
 			} else {
-				throw new InvalidArgumentException('Invalid HTTP method; must be either GET or POST.');
+				throw new \InvalidArgumentException('Invalid HTTP method; must be either GET or POST.');
 			}
+
+			// Verify SSL certs
+			// Download a copy from http://curl.haxx.se/ca/cacert.pem and save
+			// to certs/cacert.pem to prevent MITM attacks.
+			//
+			// More info: http://stackoverflow.com/q/6400300/558592
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+			curl_setopt($ch, CURLOPT_CAINFO, __DIR__ . '/certs/cacert.pem');
 
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, $curlMethod, true);
@@ -233,7 +241,7 @@
 			$response = json_decode($jsonResponse, true);
 
 			if (json_last_error() != JSON_ERROR_NONE) {
-				throw new Exception(json_last_error_msg());
+				throw new \Exception(json_last_error_msg());
 			}
 
 			return $response;
