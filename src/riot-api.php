@@ -2,27 +2,33 @@
 	namespace RiotApi;
 
 	require_once('riot-region.php');
+	require_once('riot-api-version.php');
 	require_once('json-error.php');
 
 	class Api {
-		private static $BASE_API_URL = 'http://prod.api.pvp.net/api';
-		private static $V1_1_URL = '/lol/{region}/v1.1';
-		private static $V2_1_URL = '/{region}/v2.1';
+		const BASE_API_URL = 'https://prod.api.pvp.net/api/lol{static-data}/{region}/v{version}{operation}';
+
+		public static $API_URLS = array(
+			'champion' => '',
+			'game' => '',
+			'league' => '',
+			'staticData' => '',
+			'stats' => '',
+			'summoner' => '',
+			'team' => ''
+		);
 
 		private $apiKey;
 		private $region;
-
-		// API URLs with the correct region bound by bindRegionToUrl
-		private $v11Url;
-		private $v21Url;
 
 		/**
 		 * Initializes the static constants with the right values, as PHP does
 		 * not allow static properties to contain expressions.
 		 */
 		public static function init() {
-			self::$V1_1_URL = self::$BASE_API_URL . self::$V1_1_URL;
-			self::$V2_1_URL = self::$BASE_API_URL . self::$V2_1_URL;
+			foreach (self::$API_URLS as $operation => &$url) {
+				$url = self::buildApiUrl($operation);
+			}
 		}
 
 		public function __construct($apiKey, $region = 'NA') {
@@ -33,8 +39,6 @@
 			}
 
 			$this->region = $region;
-			$this->v11Url = $this->bindRegionToUrl(self::$V1_1_URL, $region);
-			$this->v21Url = $this->bindRegionToUrl(self::$V2_1_URL, $region);
 		}
 
 		public function getChampions($freeToPlay = null) {
@@ -190,11 +194,20 @@
 			return $teams;
 		}
 
-		private function getDefaultParams() {
-			$params = array();
-			$params['api_key'] = $this->apiKey;
+		private static function buildApiUrl($operation) {
+			$version = ApiVersion::${$operation};
+			$isStaticData = $operation === 'staticData';
 
-			return $params;
+			$url = self::BASE_API_URL;
+			$url = self::bind($url, 'static-data', $isStaticData ? '/static-data' : '');
+			$url = self::bind($url, 'version', $version);
+			$url = self::bind($url, 'operation', $isStaticData ? '' : '/' . $operation);
+
+			return $url;
+		}
+
+		private static function bind($template, $key, $value) {
+			return str_replace('{' . $key . '}', $value, $template);
 		}
 
 		/**
@@ -242,8 +255,11 @@
 			return $response;
 		}
 
-		private static function bindRegionToUrl($url, $region) {
-			return str_replace('{region}', strtolower($region), $url);
+		private function getDefaultParams() {
+			$params = array();
+			$params['api_key'] = $this->apiKey;
+
+			return $params;
 		}
 	}
 
