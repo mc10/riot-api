@@ -41,6 +41,14 @@
 			$this->region = $region;
 		}
 
+		public function setRegion($region) {
+			if (!Region::isRegion($region)) {
+				throw new \InvalidArgumentException('Invalid region.');
+			}
+
+			$this->region = $region;
+		}
+
 		public function getChampions($freeToPlay = null) {
 			$apiUrl = self::$API_URLS['champion'];
 			$params = array();
