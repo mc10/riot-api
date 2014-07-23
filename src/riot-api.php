@@ -241,7 +241,7 @@
 
 		private function sendApiRequest($url, $params = array()) {
 			// Final touches on URL and params
-			$url = self::bind($url, 'region', $this->region);
+			$url = self::bind($url, 'region', strtolower($this->region));
 			$params['api_key'] = $this->apiKey;
 
 			return self::getJsonResponse($url, $params);
