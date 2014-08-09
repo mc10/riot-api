@@ -198,6 +198,14 @@
 			return $url;
 		}
 
+		/**
+		 * Bind a value to a {key} in a template string.
+		 * @param  string $template The string with the key needed to be bound.
+		 * @param  string $key      The {key} in the template to be replaced.
+		 * @param  string $value    The value to replace the {key} with.
+		 * @return string           The template with the value bound to the
+		 *                          key.
+		 */
 		private static function bind($template, $key, $value) {
 			return str_replace('{' . $key . '}', $value, $template);
 		}
