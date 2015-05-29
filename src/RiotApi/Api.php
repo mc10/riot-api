@@ -11,6 +11,8 @@
 			'champion' => '',
 			'game' => '',
 			'league' => '',
+			'match' => '',
+			'matchhistory' => '',
 			'staticData' => '',
 			'stats' => '',
 			'summoner' => '',

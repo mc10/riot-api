@@ -5,6 +5,8 @@
 		public static $champion = '1.2';
 		public static $game = '1.3';
 		public static $league = '2.5';
+		public static $match = '2.2';
+		public static $matchhistory = '2.2';
 		public static $staticData = '1.2';
 		public static $stats = '1.3';
 		public static $summoner = '1.4';
