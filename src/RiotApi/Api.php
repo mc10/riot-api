@@ -1,12 +1,11 @@
 <?php
 	namespace RiotApi;
 
-	require_once('riot-region.php');
-	require_once('riot-api-version.php');
-	require_once('json-error.php');
+	require 'Autoloader.php';
+	require 'JsonError.php';
 
 	class Api {
-		const BASE_API_URL = 'https://prod.api.pvp.net/api/lol{static-data}/{region}/v{version}{operation}';
+		const BASE_API_URL = 'https://{region}.api.pvp.net/api/lol{static-data}/{region}/v{version}{operation}';
 
 		public static $API_URLS = array(
 			'champion' => '',
@@ -31,6 +30,11 @@
 			}
 		}
 
+		/**
+		 * Creates an instance of the API.
+		 * @param string $apiKey The API key that Riot provides.
+		 * @param string $region The region used for API calls. Defaults to NA.
+		 */
 		public function __construct($apiKey, $region = 'NA') {
 			$this->apiKey = $apiKey;
 
@@ -41,6 +45,10 @@
 			$this->region = $region;
 		}
 
+		/**
+		 * Set the region currently used by the API.
+		 * @param string $region The new region.
+		 */
 		public function setRegion($region) {
 			if (!Region::isRegion($region)) {
 				throw new \InvalidArgumentException('Invalid region.');
@@ -223,7 +231,7 @@
 			$httpQuery = http_build_query($params);
 			$url .= '?' . $httpQuery;
 
-			//echo $url . "\n";
+			// echo $url . "\n";
 
 			$ch = curl_init();
 
