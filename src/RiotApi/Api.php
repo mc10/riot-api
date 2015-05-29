@@ -81,12 +81,47 @@
 			return $recentGames['games'];
 		}
 
-		public function getLeagues($summonerId) {
-			if (!is_int($summonerId)) {
-				throw new \InvalidArgumentException('Summoner ID must be an integer.');
+		public function getLeaguesBySummoner($summonerIds) {
+			$MAX_IDS = 10;
+
+			if (!is_array($summonerIds) && !is_int($summonerIds)) {
+				throw new \InvalidArgumentException('Summoner IDs must be an '
+					. 'integer or a list of integers.');
 			}
 
-			$apiUrl = self::$API_URLS['league'] . '/by-summoner/' . $summonerId;
+			if (!is_array($summonerIds)) {
+				$summonerIds = array($summonerIds);
+			}
+
+			if (count($summonerIds) > $MAX_IDS) {
+				throw new \InvalidArgumentException('The list of summoner IDs '
+					. 'cannot exceed ' . $MAX_IDS . ' entries.');
+			}
+
+			$apiUrl = self::$API_URLS['league'] . '/by-summoner/' . implode(',', $summonerIds);
+			$leagues = $this->sendApiRequest($apiUrl);
+
+			return $leagues;
+		}
+
+		public function getLeagueEntriesBySummoner($summonerIds) {
+			$MAX_IDS = 10;
+
+			if (!is_array($summonerIds) && !is_int($summonerIds)) {
+				throw new \InvalidArgumentException('Summoner IDs must be an '
+					. 'integer or a list of integers.');
+			}
+
+			if (!is_array($summonerIds)) {
+				$summonerIds = array($summonerIds);
+			}
+
+			if (count($summonerIds) > $MAX_IDS) {
+				throw new \InvalidArgumentException('The list of summoner IDs '
+					. 'cannot exceed ' . $MAX_IDS . ' entries.');
+			}
+
+			$apiUrl = self::$API_URLS['league'] . '/by-summoner/' . implode(',', $summonerIds) . '/entry';
 			$leagues = $this->sendApiRequest($apiUrl);
 
 			return $leagues;
