@@ -268,16 +268,20 @@
 			$httpQuery = http_build_query($params);
 			$url .= '?' . $httpQuery;
 
-			// echo $url . "\n";
-
 			$ch = curl_init();
 
-			if ($method === 'GET') {
+			switch ($method) {
+			case 'GET':
 				$curlMethod = CURLOPT_HTTPGET;
-			} elseif ($method === 'POST') {
+				break;
+
+			case 'POST':
 				$curlMethod = CURLOPT_POST;
-			} else {
+				break;
+
+			default:
 				throw new \InvalidArgumentException('Invalid HTTP method; must be either GET or POST.');
+				break;
 			}
 
 			// Verify SSL certs
@@ -301,7 +305,7 @@
 			// Use an associative array rather than an object
 			$response = json_decode($jsonResponse, true);
 
-			if (json_last_error() != JSON_ERROR_NONE) {
+			if (json_last_error() !== JSON_ERROR_NONE) {
 				throw new \Exception(json_last_error_msg());
 			}
 
