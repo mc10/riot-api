@@ -5,9 +5,11 @@
 	require 'JsonError.php';
 
 	class Api {
-		const BASE_API_URL = 'https://{region}.api.pvp.net/api/lol{static-data}/{region}/v{version}{operation}';
+		const BASE_URL = 'https://{region}.api.pvp.net';
+		const BASE_API_PATH = '/api/lol{static-data}/{region}/v{version}{operation}';
+		const BASE_OBSERVER_PATH = '/observer-mode/rest';
 
-		public static $API_URLS = array(
+		private static $API_URLS = array(
 			'champion' => '',
 			'game' => '',
 			'league' => '',
@@ -17,6 +19,11 @@
 			'stats' => '',
 			'summoner' => '',
 			'team' => ''
+		);
+
+		public static $OBSERVER_URLS = array(
+			'currentGame' => '/consumer/getSpectatorGameInfo/{platformId}/{summonerId}',
+			'featuredGames' => '/featured'
 		);
 
 		private $apiKey;
@@ -29,6 +36,10 @@
 		public static function init() {
 			foreach (self::$API_URLS as $operation => &$url) {
 				$url = self::buildApiUrl($operation);
+			}
+
+			foreach (self::$OBSERVER_URLS as $operation => &$url) {
+				$url = self::buildObserverUrl($url, $operation);
 			}
 		}
 
@@ -235,10 +246,19 @@
 			$version = ApiVersion::${$operation};
 			$isStaticData = $operation === 'staticData';
 
-			$url = self::BASE_API_URL;
+			$url = self::BASE_URL . self::BASE_API_PATH;
 			$url = self::bind($url, 'static-data', $isStaticData ? '/static-data' : '');
 			$url = self::bind($url, 'version', $version);
 			$url = self::bind($url, 'operation', $isStaticData ? '' : '/' . $operation);
+
+			return $url;
+		}
+
+		private static function buildObserverUrl($url, $operation) {
+			$version = ApiVersion::${$operation};
+
+			$url = self::BASE_URL . self::BASE_OBSERVER_PATH . $url;
+			$url = self::bind($url, 'version', $version);
 
 			return $url;
 		}
