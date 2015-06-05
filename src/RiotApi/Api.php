@@ -21,7 +21,7 @@
 			'team' => ''
 		);
 
-		public static $OBSERVER_URLS = array(
+		private static $OBSERVER_URLS = array(
 			'currentGame' => '/consumer/getSpectatorGameInfo/{platformId}/{summonerId}',
 			'featuredGames' => '/featured'
 		);
