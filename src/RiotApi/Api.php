@@ -265,24 +265,21 @@
 		 * @return array          The response in the form of a parsed array.
 		 */
 		private static function getJsonResponse($url, $params, $method = 'GET') {
+			static $CURL_METHODS = array(
+				'GET' => CURLOPT_HTTPGET,
+				'POST' => CURLOPT_POST
+			);
+
 			$httpQuery = http_build_query($params);
 			$url .= '?' . $httpQuery;
 
 			$ch = curl_init();
 
-			switch ($method) {
-			case 'GET':
-				$curlMethod = CURLOPT_HTTPGET;
-				break;
-
-			case 'POST':
-				$curlMethod = CURLOPT_POST;
-				break;
-
-			default:
+			if (!isset($CURL_METHODS[$method])) {
 				throw new \InvalidArgumentException('Invalid HTTP method; must be either GET or POST.');
-				break;
 			}
+
+			$curlMethod = $CURL_METHODS[$method];
 
 			// Verify SSL certs
 			// Download a copy from http://curl.haxx.se/ca/cacert.pem and save
