@@ -95,7 +95,7 @@
 		}
 
 		public function getLeaguesBySummoner($summonerIds) {
-			$MAX_IDS = 10;
+			static $MAX_IDS = 10;
 
 			if (!is_array($summonerIds) && !is_int($summonerIds)) {
 				throw new \InvalidArgumentException('Summoner IDs must be an '
@@ -118,7 +118,7 @@
 		}
 
 		public function getLeagueEntriesBySummoner($summonerIds) {
-			$MAX_IDS = 10;
+			static $MAX_IDS = 10;
 
 			if (!is_array($summonerIds) && !is_int($summonerIds)) {
 				throw new \InvalidArgumentException('Summoner IDs must be an '
