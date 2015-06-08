@@ -14,4 +14,6 @@
 		public static $status = '1.0';
 		public static $summoner = '1.4';
 		public static $team = '2.3';
+
+		private function __construct() {}
 	}
